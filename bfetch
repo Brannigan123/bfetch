@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# formatting
+txtblk='\e[0;30m' # Black
+txtred='\e[0;31m' # Red
+txtgrn='\e[0;32m' # Green
+txtylw='\e[0;33m' # Yellow
+txtblu='\e[0;34m' # Blue
+txtpur='\e[0;35m' # Purple
+txtcyn='\e[0;36m' # Cyan
+txtwht='\e[0;37m' # White
+italic='\e[3m'    # italic
+bold='\e[1m'      # bold
+reset='\e[0m'     # reset
+
+# get wm name
+wm_win_id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
+wm_win_id=${wm_win_id##* }
+wm=$(xprop -id "$wm_win_id" -notype -len 100 -f _NET_WM_NAME 8t)
+wm=${wm/*WM_NAME = /}
+wm=${wm/\"/}
+wm=${wm/\"*/}
+
+# info
+USER=$(whoami)
+KERNEL=$(uname -r)
+OS=$(hostnamectl | grep "Operating System: " | cut -c 19-)
+PKGS=$(dpkg -l | grep -c '^ii')
+WTTR=$(curl -s https://wttr.in/\?format\=%C+%t)
+WM=${wm}
+GTK=$(cat ~/.config/gtk-3.0/settings.ini | grep "^gtk-theme-name=" | cut -d"=" -f2-)
+UPTIME=$(uptime -p | cut -d"," -f1)
+SHELL="${SHELL##*/}"
+
+# fetch
+echo -e "${txtcyn}╭─────────────────────────────────────────────────────────────────────╮"
+echo -e "${reset}"
+echo -e "${txtred}  ⠀⠀⠀⠀⣀⣤⣴⣶⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣶⣶⣦⣤⡀⠀⠀⠀   user    :  ${italic}${USER}"
+echo -e "${txtred}   ⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀  kernel  :  ${italic}${KERNEL}"
+echo -e "${txtylw}  ⠀⠀⣾⣿⠟⠋⠉⠀⠀⠉⠙⠻⣿⣷⡀⣰⣿⣿⣿⠟⠉⠀⠀⠀⠈⠙⣿⣷⠀⠀  os      :  ${italic}${OS}"
+echo -e "${txtylw}  ⠀⢸⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠸⣿⡇⠀  weather :  ${italic}${WTTR}"
+echo -e "${txtwht}  ⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀  wm      :  ${italic}${WM}"
+echo -e "${txtblu}  ⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡇⠀  gtk     :  ${italic}${GTK}"
+echo -e "${txtblu}  ⠀⠀⢿⣿⣄⡀⠀⠀⠀⢀⣴⣿⣿⣿⠟⠘⢿⣿⣦⣀⡀⠀⠀⢀⣀⣴⣿⡿⠀⠀  uptime  :  ${italic}${UPTIME}"
+echo -e "${txtpur}    ⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀  pkgs    :  ${italic}${PKGS}"
+echo -e "${txtpur}  ⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⠿⠿⠛⠉⠀⠀⠀⠀  shell   :  ${italic}${SHELL}"
+echo -e "${reset}"
+echo -e "                          ${txtred}  ${txtgrn}  ${txtylw}  ${txtblu}  ${txtpur}  ${txtcyn}  ${txtwht}                          "
+echo -e "${reset}"
+echo -e "${txtcyn}╰─────────────────────────────────────────────────────────────────────╯"
