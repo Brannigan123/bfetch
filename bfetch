@@ -24,26 +24,26 @@ wm=${wm/\"*/}
 # info
 USER=$(whoami)
 KERNEL=$(uname -r)
-OS=$(hostnamectl | grep "Operating System: " | cut -c 19-)
-PKGS=$(dpkg -l | grep -c '^ii')
+OS=$(cat /etc/os-release | grep "PRETTY_NAME=" | cut -c 13- | tr -d '"')
+PKGS=$((dpkg-query -l 2> /dev/null || pacman -Q 2> /dev/null ) | wc -l)
 WTTR=$(curl -s https://wttr.in/\?format\=%C+%t)
 WM=${wm}
-GTK=$(cat ~/.config/gtk-3.0/settings.ini | grep "^gtk-theme-name=" | cut -d"=" -f2-)
+GTK=$(gsettings get org.gnome.desktop.interface gtk-theme |  tr -d "'")
 UPTIME=$(uptime -p | cut -d"," -f1)
 SHELL="${SHELL##*/}"
 
 # fetch
 echo -e "${txtcyn}╭─────────────────────────────────────────────────────────────────────╮"
 echo -e "${reset}"
-echo -e "${txtred}  ⠀⠀⠀⠀⣀⣤⣴⣶⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣶⣶⣦⣤⡀⠀⠀⠀   user    :  ${italic}${USER}"
-echo -e "${txtred}   ⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀  kernel  :  ${italic}${KERNEL}"
-echo -e "${txtylw}  ⠀⠀⣾⣿⠟⠋⠉⠀⠀⠉⠙⠻⣿⣷⡀⣰⣿⣿⣿⠟⠉⠀⠀⠀⠈⠙⣿⣷⠀⠀  os      :  ${italic}${OS}"
-echo -e "${txtylw}  ⠀⢸⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠸⣿⡇⠀  weather :  ${italic}${WTTR}"
-echo -e "${txtwht}  ⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⠀  wm      :  ${italic}${WM}"
-echo -e "${txtblu}  ⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡇⠀  gtk     :  ${italic}${GTK}"
-echo -e "${txtblu}  ⠀⠀⢿⣿⣄⡀⠀⠀⠀⢀⣴⣿⣿⣿⠟⠘⢿⣿⣦⣀⡀⠀⠀⢀⣀⣴⣿⡿⠀⠀  uptime  :  ${italic}${UPTIME}"
-echo -e "${txtpur}    ⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀  pkgs    :  ${italic}${PKGS}"
-echo -e "${txtpur}  ⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⠿⠿⠛⠉⠀⠀⠀⠀  shell   :  ${italic}${SHELL}"
+echo -e "${txtred}      ⣀⣤⣴⣶⣶⣦⣄⡀      ⢀⣤⣶⣶⣶⣦⣤⡀      os      :  ${bold}${OS}"
+echo -e "${txtred}    ⢀⣾⣿⣿⣿⣿⣿⣿⣿⣷⣄   ⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀    kernel  :  ${bold}${KERNEL}"
+echo -e "${txtylw}    ⣾⣿⠟⠋⠉  ⠉⠙⠻⣿⣷⡀⣰⣿⣿⣿⠟⠉   ⠈⠙⣿⣷    theme   :  ${bold}${GTK}"
+echo -e "${txtylw}   ⢸⣿⠏        ⠈⢻⣿⣿⣿⡿⠃       ⠸⣿⡇   shell   :  ${bold}${SHELL}"
+echo -e "${txtwht}   ⢸⣿         ⢀⣾⣿⣿⡿⠁         ⣿⡇   wm      :  ${bold}${WM}"
+echo -e "${txtblu}   ⢸⣿⡆       ⢀⣾⣿⣿⣿⣧⡀        ⢰⣿⡇   pkgs    :  ${bold}${PKGS}"
+echo -e "${txtblu}    ⢿⣿⣄⡀   ⢀⣴⣿⣿⣿⠟⠘⢿⣿⣦⣀⡀  ⢀⣀⣴⣿⡿    user    :  ${bold}${USER}"
+echo -e "${txtpur}    ⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁   ⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁    uptime  :  ${bold}${UPTIME}"
+echo -e "${txtpur}      ⠈⠛⠻⠿⠿⠿⠛⠁      ⠈⠙⠻⠿⠿⠿⠛⠉      weather :  ${bold}${WTTR}"
 echo -e "${reset}"
 echo -e "                          ${txtred}  ${txtgrn}  ${txtylw}  ${txtblu}  ${txtpur}  ${txtcyn}  ${txtwht}                          "
 echo -e "${reset}"
