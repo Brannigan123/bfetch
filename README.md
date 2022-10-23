@@ -3,4 +3,5 @@
 Simple shellscript for display system information in the terminal.
 
 
-![cropped](https://user-images.githubusercontent.com/41282933/197253548-7b657edc-18a6-4f09-bec6-9ddcc12fef7a.png)
+![2022-10-23_05-26](https://user-images.githubusercontent.com/41282933/197370596-04215d8b-9560-4756-b8e7-49302a53d7f4.png)
+
